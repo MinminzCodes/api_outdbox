@@ -10,6 +10,7 @@ function obtenerUsuario(username, password) {
     return new Promise(async (ok, ko) => {
         try {
             const conexion = await conectar();
+            console.log("Buscando usuario:", username, password);  // Agrega este log para ver los valores que llegan
 
             let usuario = await conexion
             .db("outdbox")
