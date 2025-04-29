@@ -129,7 +129,7 @@ servidor.get("/reviews", async (peticion, respuesta) => {
 });
 
 
-// Middleware para crear una nueva review
+// Middleware para crear una nueva reviews
 servidor.post("/reviews/nueva", async (peticion, respuesta) => {
     // Verificar si se proporciona la información necesaria en el cuerpo de la solicitud
     if (!peticion.body.userId || !peticion.body.movieId || !peticion.body.review || !peticion.body.rating) {
