@@ -5,7 +5,7 @@ function conectar() {
     return MongoClient.connect(process.env.URL_MONGO);
 }
 
-//Buscamos al usuario en nuestra base de datos
+//Buscamos al usuario en nuestra base de datos que esta en el env
 function obtenerUsuario(username, password) {
     return new Promise(async (ok, ko) => {
         try {
