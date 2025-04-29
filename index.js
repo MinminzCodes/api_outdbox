@@ -129,7 +129,7 @@ servidor.get("/reviews", async (peticion, respuesta) => {
 });
 
 
-// Middleware para crear una nueva reviews
+// Middleware para crear una nueva review
 servidor.post("/reviews/nueva", async (peticion, respuesta) => {
     // Verificar si se proporciona la información necesaria en el cuerpo de la solicitud
     if (!peticion.body.userId || !peticion.body.movieId || !peticion.body.review || !peticion.body.rating) {
@@ -204,12 +204,7 @@ servidor.post("/login", async (peticion, respuesta) => {
         respuesta.json({ message: "Autenticación exitosa", user: perfil }); // Devuelve el perfil completo del usuario
 
     } catch (error) {
-        console.error("Error en la autenticación:", error); // Esto es para que veas el error en la consola del servidor
-        respuesta.status(500).json({
-            error: 'Error en la autenticación',
-            details: error.message, // Detalle del error
-            stack: error.stack  // Esto te proporcionará el stack trace
-        });
+        respuesta.status(500).json({ error: 'Error en la autenticación', details: error.message });
     }
 });
 
