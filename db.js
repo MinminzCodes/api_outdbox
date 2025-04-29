@@ -10,7 +10,6 @@ function obtenerUsuario(username, password) {
     return new Promise(async (ok, ko) => {
         try {
             const conexion = await conectar();
-            console.log("Buscando usuario:", username, password);  // Agrega este log para ver los valores que llegan
 
             let usuario = await conexion
             .db("outdbox")
@@ -32,14 +31,11 @@ function obtenerPerfil(userId) {
         try {
             const conexion = await conectar();
 
-            // Convertir userId en ObjectId
-            const objectId = new ObjectId(userId);
-
             // Obtener información del usuario
-            let usuario = await conexion.db("outdbox").collection("users").findOne({ _id: objectId });
+            let usuario = await conexion.db("outdbox").collection("users").findOne({ _id: new ObjectId(userId) });
 
             // Obtener reseñas del usuario
-            let reviews = await conexion.db("outdbox").collection("reviews").find({ userId: objectId }).toArray();
+            let reviews = await conexion.db("outdbox").collection("reviews").find({ userId: new ObjectId(userId) }).toArray();
 
             conexion.close();
 
@@ -57,28 +53,29 @@ function obtenerPerfil(userId) {
 }
 
 //Almacenamos las reviews
-function reviews() {
-    return new Promise(async (ok, ko) => {
-        try {
+function reviews(){
+    return new Promise(async (ok,ko) => {
+        try{
             const conexion = await conectar();
 
             let review = await conexion.db("outdbox").collection("reviews").find({}).toArray();
-
+            
             conexion.close();
 
-            ok(review.map(({ _id, movieId, review, rating, favorite }) => {
-                return { id: _id, movieId, review, rating, favorite };
+            ok(review.map( ({_id,movieId,review,rating,favorite})=> {
+                return {id:_id,movieId,review,rating,favorite};
             }));
 
-        } catch (error) {
+        }catch(error){
 
-            ko({ error: "Error en el servidor" });
+            ko({ error : "Error en el servidor" });
 
         }
     });
 }
 
-// Como dice su nombre creamos la review :D
+
+// Como dice su nombre creamos la review :D 
 function crearReview(userId, movieId, review, rating, favorite) {
     return new Promise(async (ok, ko) => {
         try {
@@ -92,13 +89,13 @@ function crearReview(userId, movieId, review, rating, favorite) {
             let { insertedId } = await conexion
                 .db("outdbox")
                 .collection("reviews")
-                .insertOne({
-                    userId: new ObjectId(userId), // Convertir userId en ObjectId
+                .insertOne({ 
+                    userId: new ObjectId(userId),
                     movieId,  // Mantener movieId como string
                     review,
                     rating,
                     favorite,
-                    date: new Date()
+                    date: new Date() 
                 });
 
             conexion.close();
@@ -115,14 +112,11 @@ function editarReview(id, review, rating, favorite) {
         try {
             const conexion = await conectar();
 
-            // Convertir id en ObjectId
-            const objectId = new ObjectId(id);
-
             let { modifiedCount } = await conexion
                 .db("outdbox")
                 .collection("reviews")
                 .updateOne(
-                    { _id: objectId }, // Convertir id a ObjectId
+                    { _id: new ObjectId(id) },
                     { $set: { review, rating, favorite } }
                 );
 
@@ -141,25 +135,21 @@ function borrarReview(id) {
     return new Promise(async (ok, ko) => {
         try {
             const conexion = await conectar();
-
-            // Convertir id en ObjectId
-            const objectId = new ObjectId(id);
-
             let { deletedCount } = await conexion
-                .db("outdbox")
-                .collection("reviews")
-                .deleteOne(
-                    { _id: objectId } // Convertir id a ObjectId
-                );
+            .db("outdbox")
+            .collection("reviews")
+            .deleteOne(
+                { _id: new ObjectId(id) }
+            );
 
             conexion.close();
 
             ok(deletedCount); // 0 o 1 dependiendo de si se realizó la eliminación
-
+        
         } catch (error) {
             ko({ error: "Error en BBDD", details: error });
         }
     });
 }
 
-module.exports = { obtenerUsuario, obtenerPerfil, reviews, crearReview, editarReview, borrarReview };
+module.exports = {obtenerUsuario, obtenerPerfil, reviews, crearReview, editarReview, borrarReview};
