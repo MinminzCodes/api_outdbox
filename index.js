@@ -204,7 +204,12 @@ servidor.post("/login", async (peticion, respuesta) => {
         respuesta.json({ message: "Autenticación exitosa", user: perfil }); // Devuelve el perfil completo del usuario
 
     } catch (error) {
-        respuesta.status(500).json({ error: 'Error en la autenticación', details: error.message });
+        console.error("Error en la autenticación:", error); // Esto es para que veas el error en la consola del servidor
+        respuesta.status(500).json({
+            error: 'Error en la autenticación',
+            details: error.message, // Detalle del error
+            stack: error.stack  // Esto te proporcionará el stack trace
+        });
     }
 });
 
